@@ -1,31 +1,43 @@
 import SideBar from "../components/SideBar";
+import { useGet } from "../useFetch";
 
 const PetInfo = ({ pet, close }) => {
+  const { data: owner } = useGet(
+    `https://amivet.onrender.com/owner/${pet.owner}`
+  );
+
+  const { data } = useGet(`https://amivet.onrender.com/petService/${pet._id}`);
+
   return (
     <>
       <SideBar />
       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
-          <button className="absolute text-white top-4 right-4" onClick={close}>
+        <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md relative">
+          <button
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            onClick={close}
+          >
             Close
           </button>
-          <h1 className="text-center uppercase font-bold text-4xl mb-4">12</h1>
+          <h1 className="text-center uppercase font-bold text-4xl mb-4">
+            {pet.name}
+          </h1>
           <hr />
           <ul>
             <li>
-              <strong>Edad:</strong> 12 años
+              <strong>Fecha de nacimiento:</strong> {pet.age}
             </li>
             <li>
-              <strong>Peso:</strong> 12 kg
+              <strong>Peso:</strong> {pet.weight} kg
             </li>
             <li>
-              <strong>Raza:</strong> 12
+              <strong>Raza:</strong> {pet.species}
             </li>
             <li>
-              <strong>Dueño:</strong> 12
+              <strong>Dueño:</strong> {owner.name} {owner.last_name}
             </li>
             <li>
-              <strong>Estado:</strong> 12
+              <strong>Estado:</strong> {pet.status ? "Activo" : "Inactivo"}
             </li>
           </ul>
           <div className="mt-6">
@@ -40,7 +52,14 @@ const PetInfo = ({ pet, close }) => {
                     <th className="py-3 px-4 text-left text-gray-600">Fecha</th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                  {data.map((service) => (
+                    <tr key={service._id} className="border-b border-gray-200">
+                      <td className="py-3 px-4">{service.serviceId}</td>
+                      <td className="py-3 px-4">{service.date}</td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
             </div>
           </div>
@@ -51,14 +70,3 @@ const PetInfo = ({ pet, close }) => {
 };
 
 export default PetInfo;
-
-{
-  /*{services?.map((service) => (
-                    <tr key={service._id} className="border-b border-gray-200">
-                      <td className="py-3 px-4">{service.name}</td>
-                      <td className="py-3 px-4">
-                        {new Date(service.date).toLocaleDateString()}
-                      </td>
-                    </tr>
-                  ))} */
-}

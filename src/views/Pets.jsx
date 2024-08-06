@@ -2,11 +2,13 @@ import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import SideBar from "../components/SideBar";
 import PetCard from "../components/PetCard";
+import PetInfo from "./PetInfo";
 import { useGet } from "../useFetch";
 import { Link } from "react-router-dom";
 
 const Pets = () => {
   const [currentPage, setCurrentPage] = useState(0);
+  const [selectedPet, setSelectedPet] = useState(null);
   const itemsPerPage = 5;
 
   const { data, loading } = useGet("https://amivet.onrender.com/pet");
@@ -19,6 +21,16 @@ const Pets = () => {
   // Función para manejar el cambio de página
   const handlePageClick = (event) => {
     setCurrentPage(event.selected);
+  };
+
+  // Función para abrir el modal
+  const handleOpenModal = (pet) => {
+    setSelectedPet(pet);
+  };
+
+  // Función para cerrar el modal
+  const handleCloseModal = () => {
+    setSelectedPet(null);
   };
 
   return (
@@ -51,7 +63,11 @@ const Pets = () => {
             </div>
           )}
           {currentPets.map((pet) => (
-            <PetCard key={pet._id} pet={pet} />
+            <PetCard
+              key={pet._id}
+              pet={pet}
+              onClick={() => handleOpenModal(pet)}
+            />
           ))}
         </div>
         <div className="mt-4 flex justify-center">
@@ -87,6 +103,8 @@ const Pets = () => {
           />
         </div>
       </div>
+
+      {selectedPet && <PetInfo pet={selectedPet} close={handleCloseModal} />}
     </>
   );
 };

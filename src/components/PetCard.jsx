@@ -1,6 +1,6 @@
 import { useGet } from "../useFetch";
 
-const PetCard = ({ pet }) => {
+const PetCard = ({ pet, onClick }) => {
   const calculateAge = (birthDate) => {
     const today = new Date();
     const birthDateObj = new Date(birthDate);
@@ -22,7 +22,10 @@ const PetCard = ({ pet }) => {
   );
 
   return (
-    <div className="max-w-sm w-full md:w-80 rounded-lg hover:scale-105 transition-all overflow-hidden shadow-lg bg-white px-6 py-2 m-4 border border-gray-200">
+    <div
+      className="max-w-sm w-full md:w-80 rounded-lg hover:scale-105 transition-all overflow-hidden shadow-lg bg-white px-6 py-2 m-4 border border-gray-200 cursor-pointer"
+      onClick={onClick}
+    >
       <div className="flex items-center mb-4">
         <div className="flex-shrink-0 w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-white text-xl font-bold">
           {pet.name[0]}
